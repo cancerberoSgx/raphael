@@ -1,9 +1,10 @@
 describe("A suite", function() {
 
 	var paper;
+	var counter1; 
 	beforeEach(function() {
-		// $(document.body).empty();
 		paper = Raphael(400, 0, 600, 600);
+		counter=0; 
 	});
 
 	it("Basic Shape Attributes", function() {
@@ -35,5 +36,28 @@ describe("A suite", function() {
 		expect(s4.type).toBe("set");
 		
 	});
+	
+	
+	
+	it("isPointInside", function() {
+		var set1 = paper.set(); 
+		var rect1 = paper.rect(1,1,5,5);
+		expect(rect1.isPointInside(3,3)).toBe(true);
+		expect(rect1.isPointInside(13,3)).toBe(false);
+		expect(rect1.isPointInside(0,1)).toBe(false);
+		expect(rect1.isPointInside(4,2)).toBe(false);
+	});
+
+
+
+it("eve", function() {
+	expect(counter).toBe(0);
+	eve.on("*.under.*", function(e){
+		console.log(e); 
+		counter++;
+	});
+	eve("mouse.under.floor"); 
+	expect(counter).toBe(1);
+});
 });
 
