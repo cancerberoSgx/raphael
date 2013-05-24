@@ -387,6 +387,25 @@
     R.fn = paperproto = Paper.prototype = R.prototype;
     R._id = 0;
     R._oid = 0;
+	R._is_array = function(obj) {
+		if (obj instanceof Array) {
+			return true;
+		}
+		if (typeof obj !== 'object') {
+			return false;
+		}
+		if (R._is_type(obj) === 'array') {
+			return true;
+		}
+		return false;
+	};
+	R._is_type = function(obj) {
+		if (obj === null || typeof obj === 'undefined') {
+			return String(obj);
+		}
+		return Object.prototype.toString.call(obj).replace(
+				/\[object ([a-zA-Z]+)\]/, '$1').toLowerCase();
+	};
     /*\
      * Raphael.is
      [ method ]
@@ -397,20 +416,20 @@
      - type (string) name of the type, i.e. “string”, “function”, “number”, etc.
      = (boolean) is given value is of given type
     \*/
-    R.is = function (o, type) {
-        type = lowerCase.call(type);
-        if (type == "finite") {
-            return !isnan[has](+o);
-        }
-        if (type == "array") {
-            return o instanceof Array;
-        }
-        return  (type == "null" && o === null) ||
-                (type == typeof o && o !== null) ||
-                (type == "object" && o === Object(o)) ||
-                (type == "array" && Array.isArray && Array.isArray(o)) ||
-                objectToString.call(o).slice(8, -1).toLowerCase() == type;
-    };
+	R.is = function(o, type) {
+		type = lowerCase.call(type);
+		if (type == "finite") {
+			return !isnan[has](+o);
+		}
+		if (type == "array") {
+			return R._is_array(o); 
+		}
+		return (type == "null" && o === null)
+				|| (type == typeof o && o !== null)
+				|| (type == "object" && o === Object(o))
+				|| (type == "array" && Array.isArray && Array.isArray(o))
+				|| objectToString.call(o).slice(8, -1).toLowerCase() == type;
+	};
 
     function clone(obj) {
         if (Object(obj) !== obj) {
